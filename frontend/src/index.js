@@ -12,11 +12,13 @@ import {
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@fontsource/inter';
-import { initJeeliz } from './components/tryOnViewer';
 
-if (typeof window !== 'undefined') { 
-  initJeeliz();
-}
+let isJeelizInit = false;
+
+export const getIsJeelizInit = () => isJeelizInit;
+export const setJeelizInit = (value) => {
+  isJeelizInit = value;
+};
 
 const router = createBrowserRouter([
   {
