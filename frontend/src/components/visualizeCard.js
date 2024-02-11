@@ -5,10 +5,14 @@ import viewer_thumbnail from '../resources/viewer_thumbnail.png';
 import try_on_thumbnail from '../resources/try_on_thumbnail.png';
 import { useNavigate } from 'react-router-dom';
 import { TryOnViewer } from './tryOnViewer';
+import { useJeelizStartup } from './helper/JeelizStartup.js'
+import { AppStateContext } from '../pages/AppStateContext';
 
 export function VisualizeCard(props) {
     const [opened3D, setOpened3D] = React.useState(false);
     const [showFrame, setShowFrame] = React.useState(true);
+    const { isReady, setReady } = React.useContext(AppStateContext);
+    const [tryOnClicked, setTryOnClicked] = React.useState(false);
     const modalRef = React.useRef(null);
     const navigate = useNavigate();
 
@@ -22,6 +26,13 @@ export function VisualizeCard(props) {
     const lensAndFrameUrl = 'http://localhost:5100//get-model/generated.glb?' + String(Date.now());
 
     const src = props.title === '3D Interactive Viewer' ? viewer_thumbnail : try_on_thumbnail;
+    useJeelizStartup(setReady, tryOnClicked);
+
+    React.useEffect(() => {
+        if (tryOnClicked && isReady) {
+            setOpened3D(true);
+        }
+    }, [tryOnClicked, isReady]);
 
     return (
         <>
@@ -50,7 +61,12 @@ export function VisualizeCard(props) {
                     />
                 </Card.Section>
                 {props.title === '3D Interactive Viewer' ? <Button variant='outline' leftSection={<IconView360 size={14} />} onClick={() => setOpened3D(true)} mx='35%' mt='1em'>VIEW</Button>
-                    : <Button variant='outline' leftSection={<IconCamera size={14} />} onClick={() => setOpened3D(true)} mx='35%' mt='1em'>TRY-ON</Button>}
+                    : <Button variant='outline' leftSection={<IconCamera size={14} />} loading={!isReady && tryOnClicked}
+                    onClick={() => {
+                        setTryOnClicked(true);
+                        if (isReady) setOpened3D(true);
+                    }
+                        } mx='35%' mt='1em'>TRY-ON</Button>}
             </Card>
             {props.title === '3D Interactive Viewer' ?
                 <Modal opened={opened3D} onClose={() => setOpened3D(false)} size='70em' radius='1' padding='0'>
@@ -76,7 +92,7 @@ export function VisualizeCard(props) {
                         <Modal.Body>
                             {
                                 <Stack padding='0' gap='0' ref={modalRef}>
-                                    <TryOnViewer opened={opened3D} modalRef={modalRef} material={props.material} frameName={props.frameName} />
+                                    <TryOnViewer opened={opened3D} modalRef={modalRef} modelUrl={lensAndFrameUrl} material={props.material} frameName={props.frameName} />
                                 </Stack>
                             }
                         </Modal.Body>

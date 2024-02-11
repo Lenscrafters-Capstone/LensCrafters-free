@@ -17,6 +17,7 @@ export const AppStateProvider = ({ children }) => {
   const [material, setMaterial] = useState('Standard Plastic - 1.5');
   const [frameID, setFrameID] = useState('ray_ban_round_metal');
   const [active, setActive] = useState(0);
+  const [isReady, setReady] = useState(false)
 
   const glassMaterials = ['Crown Glass - 1.52', 'Flint Glass - 1.6'];
   const plasticMaterials = ['Standard Plastic - 1.5', 'Polycarbonate - 1.59', 'High-index Plastic - 1.57', 'High-index Plastic - 1.67', 'High-index Plastic - 1.74'];
@@ -54,6 +55,7 @@ export const AppStateProvider = ({ children }) => {
     material, setMaterial,
     frameID, setFrameID,
     active, setActive,
+    isReady, setReady,
     glassMaterials,
     plasticMaterials,
     frames
