@@ -91,7 +91,8 @@ export function LensFrameSelectionPage(props) {
                         placeholder={plasticMaterials[0]}
                         value={material}
                         radius='0.25em'
-                        onChange={(value) => setMaterial(value)}></Select>
+                        onChange={(value) => setMaterial(value)}
+                        error={material == null && "Please select a material."}></Select>
                     <Popover width={500} position="bottom" withArrow shadow="md">
                         <Popover.Target>
                             <ActionIcon

@@ -34,6 +34,10 @@ export function HomePage() {
     active, setActive,
   } = React.useContext(AppStateContext);
 
+  const [isAxisODValid, setAxisODValid] = React.useState(true);
+  const [isAxisOSValid, setAxisOSValid] = React.useState(true);
+
+
   const backgroundStyle = {
     backgroundImage: `url(${metal_frames})`,
     backgroundSize: '50% auto',
@@ -42,7 +46,27 @@ export function HomePage() {
   };
 
   async function handleContinue() {
-    setPrescription({ SPH_OD: sphOD, SPH_OS: sphOS, CYL_OD: cylOD, CYL_OS: cylOS, AXIS_OD: axisOD, AXIS_OS: axisOS, PD: pd });
+    const newSphOD = sphOD || '0.00';
+    const newCylOD = cylOD || '0.00';
+    const newAxisOD = axisOD || '0.00';
+    const newSphOS = sphOS || '0.00';
+    const newCylOS = cylOS || '0.00';
+    const newAxisOS = axisOS || '0.00';
+
+    setSphOD(newSphOD);
+    setCylOD(newCylOD);
+    setAxisOD(newAxisOD);
+    setSphOS(newSphOS);
+    setCylOS(newCylOS);
+    setAxisOS(newAxisOS);
+
+    setPrescription({
+      SPH_OD: newSphOD, SPH_OS: newSphOS,
+      CYL_OD: newCylOD, CYL_OS: newCylOS,
+      AXIS_OD: newAxisOD, AXIS_OS: newAxisOS,
+      PD: pd
+    });
+
     setActive(1);
     navigate('/select-lens-frame');
   }
@@ -84,8 +108,8 @@ export function HomePage() {
             <Grid.Col span={3}>
               <Stack gap='0.5em'>
                 <Text fz='md' fw='250'>Axis</Text>
-                <AxisInput data={axisOD} setData={setAxisOD} sph={sphOD} cyl={cylOD}></AxisInput>
-                <AxisInput data={axisOS} setData={setAxisOS} sph={sphOS} cyl={cylOS}></AxisInput>
+                <AxisInput data={axisOD} setData={setAxisOD} sph={sphOD} cyl={cylOD} isValid={isAxisODValid} setValid={setAxisODValid}></AxisInput>
+                <AxisInput data={axisOS} setData={setAxisOS} sph={sphOS} cyl={cylOS} isValid={isAxisOSValid} setValid={setAxisOSValid}></AxisInput>
               </Stack>
             </Grid.Col>
           </Grid>
@@ -98,11 +122,13 @@ export function HomePage() {
           label=''
           w='10em'
           defaultValue={63}
-          min={50}
-          max={80}
           value={pd}
-          onChange={(value) => setPD(value)} />
-        <Button mt='2em' h='3em' w='10em' onClick={handleContinue}>Continue</Button>
+          onChange={(value) => setPD(value)}
+          error={(pd > 68 || pd < 54) && "Please enter a value within the accepted range of 54mm to 68mm."} />
+        <Button mt='2em' h='3em' w='10em' onClick={handleContinue} disabled={!isAxisODValid || !isAxisOSValid || (pd > 68 || pd < 54)} >Continue</Button>
+        {(!isAxisODValid || !isAxisOSValid || (pd > 68 || pd < 54)) &&
+          <Text size='sm' c='gray'>Please enter valid values to proceed.</Text>
+        }
       </Flex>
     </div>
   )
