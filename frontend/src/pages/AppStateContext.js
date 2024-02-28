@@ -6,12 +6,12 @@ import aviator_preview from '../resources/aviator_preview.png';
 export const AppStateContext = createContext();
 
 export const AppStateProvider = ({ children }) => {
-  const [sphOD, setSphOD] = useState('0.00');
-  const [cylOD, setCylOD] = useState('0.00');
-  const [axisOD, setAxisOD] = useState('0.00');
-  const [sphOS, setSphOS] = useState('0.00');
-  const [cylOS, setCylOS] = useState('0.00');
-  const [axisOS, setAxisOS] = useState('0.00');
+  const [sphOD, setSphOD] = useState('');
+  const [cylOD, setCylOD] = useState('');
+  const [axisOD, setAxisOD] = useState('');
+  const [sphOS, setSphOS] = useState('');
+  const [cylOS, setCylOS] = useState('');
+  const [axisOS, setAxisOS] = useState('');
   const [pd, setPD] = useState(63);
   const [prescription, setPrescription] = useState({});
   const [material, setMaterial] = useState('Standard Plastic - 1.5');
